@@ -201,7 +201,7 @@ function Cfn (name, template) {
         return events.some(event => moment(event.Timestamp).valueOf() < startedAt)
       }
 
-      interval = setInterval(function () {
+      function outputNewStackEvents () {
         let events = []
 
         if (running) {
@@ -235,7 +235,11 @@ function Cfn (name, template) {
               return _failure(err)
             }
           })
-      }, checkStackInterval)
+      }
+
+      // call once and repeat in intervals
+      outputNewStackEvents()
+      interval = setInterval(outputNewStackEvents, checkStackInterval)
     })
   }
 
